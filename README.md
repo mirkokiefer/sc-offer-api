@@ -1,4 +1,5 @@
 #Offer-API
+[![Build Status](https://travis-ci.org/Stocard/Offer-API.png?branch=master)](https://travis-ci.org/Stocard/Offer-API)
 
 ##`GET /offers`
 List all offers.
