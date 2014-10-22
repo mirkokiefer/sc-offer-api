@@ -5,9 +5,10 @@ var assert = require('assert');
 var port = 2000;
 var host = 'http://localhost:' + port;
 
+var store = require('s3store-mock')();
 
 before(function (done) {
-  require('../index').start('localhost', port, done);
+  require('../index').start('localhost', port, store, done);
 });
 
 var offer1 = createOfferData('Fancy');

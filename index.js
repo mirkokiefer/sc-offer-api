@@ -2,13 +2,14 @@
 var restify = require('restify');
 var uuid = require('node-uuid').v4;
 var url = require('url');
+var async = require('async');
 
 module.exports = {
   start: start
 };
 
-function start(hostname, port, cb) {
-  var server = createServer(resolveURL);
+function start(hostname, port, store, cb) {
+  var server = createServer(store, resolveURL);
   server.listen(port, function() {
     console.log('%s listening at %s', server.name, server.url);
     cb();
@@ -24,7 +25,7 @@ function start(hostname, port, cb) {
   }
 }
 
-function createServer(resolveURL) {
+function createServer(store, resolveURL) {
   var server = restify.createServer({name: 'offer_api'});
   server.use(restify.bodyParser());
 
@@ -34,14 +35,13 @@ function createServer(resolveURL) {
   server.del('/offers/:offer_id', deleteOffer);
   server.get('/offers', getOffers);
 
-  var store = require('./store')();
   return server;
 
   function postOffer(req, res, next) {
     var id = uuid();
     var offer = req.body;
     offer.offer_id = id;
-    store.writeItem(id, offer, function (err) {
+    store.writeObject(id, offer, function (err) {
       var responseBody = {
         offer_id: id,
         offer_url: createOfferURL(offer.offer_id)
@@ -52,7 +52,7 @@ function createServer(resolveURL) {
 
   function getOffer(req, res, next) {
     var offerID = req.params.offer_id;
-    store.readItem(offerID, function (err, offer) {
+    store.readObject(offerID, function (err, offer) {
       offer.offer_url = createOfferURL(offer.offer_id);
       res.send(200, offer);
     });
@@ -62,21 +62,21 @@ function createServer(resolveURL) {
     var offerID = req.params.offer_id;
     var offer = req.body;
     offer.offer_id = offerID;
-    store.writeItem(offerID, offer, function (err) {
+    store.writeObject(offerID, offer, function (err) {
       res.send(200);
     });
   }
 
   function deleteOffer(req, res, next) {
     var offerID = req.params.offer_id;
-    store.deleteItem(offerID, function (err) {
+    store.deleteObject(offerID, function (err) {
       res.send(200);
     });
   }
 
   function getOffers(req, res, next) {
-    store.readItemKeys(function (err, keys) {
-      store.readItems(keys, function (err, offers) {
+    store.readKeys(function (err, keys) {
+      async.map(keys, store.readObject, function (err, offers) {
         var mappedOffers = offers.map(function (each) {
           each.offer_url = createOfferURL(each.offer_id);
           return each;
