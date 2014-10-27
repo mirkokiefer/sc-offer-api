@@ -42,6 +42,9 @@ function createServer(store, resolveURL) {
     var offer = req.body;
     offer.offer_id = id;
     store.writeObject(id, offer, function (err) {
+      if (err) {
+        return res.send(err.statusCode, err.message);
+      }
       var responseBody = {
         offer_id: id,
         offer_url: createOfferURL(offer.offer_id)
@@ -53,6 +56,9 @@ function createServer(store, resolveURL) {
   function getOffer(req, res, next) {
     var offerID = req.params.offer_id;
     store.readObject(offerID, function (err, offer) {
+      if (err) {
+        return res.send(err.statusCode, err.message);
+      }
       offer.offer_url = createOfferURL(offer.offer_id);
       res.send(200, offer);
     });
@@ -63,6 +69,9 @@ function createServer(store, resolveURL) {
     var offer = req.body;
     offer.offer_id = offerID;
     store.writeObject(offerID, offer, function (err) {
+      if (err) {
+        return res.send(err.statusCode, err.message);
+      }
       res.send(200);
     });
   }
@@ -70,13 +79,22 @@ function createServer(store, resolveURL) {
   function deleteOffer(req, res, next) {
     var offerID = req.params.offer_id;
     store.deleteObject(offerID, function (err) {
+      if (err) {
+        return res.send(err.statusCode, err.message);
+      }
       res.send(200);
     });
   }
 
   function getOffers(req, res, next) {
     store.readKeys(function (err, keys) {
+      if (err) {
+        return res.send(err.statusCode, err.message);
+      }
       async.map(keys, store.readObject, function (err, offers) {
+        if (err) {
+          return res.send(err.statusCode, err.message);
+        }
         var mappedOffers = offers.map(function (each) {
           each.offer_url = createOfferURL(each.offer_id);
           return each;

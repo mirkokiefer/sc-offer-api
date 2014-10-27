@@ -94,6 +94,14 @@ describe('Offer API', function () {
         done();
       });
   });
+  it('should return 404 for non-existent offer', function (done) {
+    request
+      .get(offer2.offer_url)
+      .end(function (err, res) {
+        assert.equal(res.status, 404);
+        done();
+      });
+  });
 });
 
 function createOfferData(title) {

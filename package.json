@@ -14,7 +14,7 @@
     "jshint": "^2.5.6",
     "mocha": "~1.21.5",
     "mocha-jshint": "0.0.9",
-    "s3store-mock": "0.0.3",
+    "s3store-mock": "0.0.4",
     "superagent": "~0.20.0"
   },
   "dependencies": {
