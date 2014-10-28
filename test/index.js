@@ -2,6 +2,7 @@
 var request = require('superagent');
 var async = require('async');
 var assert = require('assert');
+var _ = require('underscore');
 
 var port = 2000;
 var host = 'http://localhost:' + port;
@@ -179,6 +180,25 @@ describe('Offer API', function () {
       .end(function (err, res) {
         assert.equal(res.status, 404);
         done();
+      });
+  });
+  it('should remove superfluous properties', function (done) {
+    var someOffer = createSomeValidCatalog('Title1');
+    someOffer.foo = 'bar';
+    request
+      .post(host + '/offers')
+      .send(someOffer)
+      .end(function (err, res) {
+        assert.equal(res.status, 201);
+        assert.ok(res.body.offer_id);
+        assert.ok(res.body.offer_url);
+        request.get(res.body.offer_url)
+          .end(function(err, res) {
+            assert.equal(res.status, 200);
+            var fetchedOffer = res.body;
+            assert.deepEqual(_.omit(someOffer, 'foo'), fetchedOffer);
+            done();
+          });
       });
   });
 });
