@@ -4,6 +4,7 @@ var uuid = require('node-uuid').v4;
 var url = require('url');
 var async = require('async');
 var joi = require('joi');
+var moment = require('moment');
 var offerValidationSchemata = require('./lib/offer-schemata');
 
 module.exports = {
@@ -43,13 +44,14 @@ function createServer(store, resolveURL) {
     var id = uuid();
     var offer = req.body;
     offer.offer_id = id;
-    store.writeObject(id, offer, function (err) {
+    var mapped = mapOffer(offer);
+    store.writeObject(id, mapped, function (err) {
       if (err) {
         return res.send(err.statusCode, err.message);
       }
       var responseBody = {
-        offer_id: id,
-        offer_url: createOfferURL(offer.offer_id)
+        offer_id: mapped.offer_id,
+        offer_url: createOfferURL(mapped.offer_id)
       };
       res.send(201, responseBody);
     });
@@ -64,8 +66,9 @@ function createServer(store, resolveURL) {
       if (!offer) {
         return next(new restify.NotFoundError());
       }
-      offer.offer_url = createOfferURL(offer.offer_id);
-      res.send(200, offer);
+      var mapped = mapOffer(offer);
+      mapped.offer_url = createOfferURL(offer.offer_id);
+      res.send(200, mapped);
     });
   }
 
@@ -139,5 +142,56 @@ function createServer(store, resolveURL) {
         next();
       });
     });
+  }
+}
+
+function mapOffer(data) {
+  var simpleKeys = {
+    offer_id: true,
+    type: true,
+    provider_id: true,
+    regions: true,
+    title: true,
+    status: true,
+    targeted_card_numbers: true,
+    terms_and_conditions: true,
+    is_fullscreen: true,
+    pic_url: true,
+    pic_metadata_url: true,
+    text: true,
+    affiliate_url: true,
+    coupon_code: true
+  };
+  var mapped = {};
+  Object.keys(simpleKeys).forEach(function(key) {
+    mapped[key] = data[key];
+  });
+  mapped.valid_from = moment(data.valid_from).toDate();
+  mapped.valid_until = moment(data.valid_until).toDate();
+  mapped.delivery_date = moment(data.delivery_date).toDate();
+  if (data.pages) {
+    mapped.pages = mapPages(data.pages);
+  }
+  if (data.barcode) {
+    mapped.barcode = mapBarcode(data.barcode);
+  }
+  return mapped;
+
+  function mapPages(pages) {
+    return pages.map(function(page) {
+      return {
+        pic_url: page.pic_url,
+        pic_metadata_url: page.pic_metadata_url,
+        title: page.title,
+        store_url: page.store_url
+      };
+    });
+  }
+
+  function mapBarcode(barcode) {
+    return {
+      content: barcode.content,
+      format: barcode.format
+    };
   }
 }

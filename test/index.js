@@ -196,6 +196,8 @@ describe('Offer API', function () {
           .end(function(err, res) {
             assert.equal(res.status, 200);
             var fetchedOffer = res.body;
+            someOffer.offer_id = fetchedOffer.offer_id;
+            someOffer.offer_url = fetchedOffer.offer_url;
             assert.deepEqual(_.omit(someOffer, 'foo'), fetchedOffer);
             done();
           });
