@@ -174,9 +174,18 @@ describe('Offer API', function () {
         done();
       });
   });
-  it('should return 404 for non-existent offer', function (done) {
+  it('should return 404 when trying to read non-existent offer', function (done) {
     request
       .get(offer2.offer_url)
+      .end(function (err, res) {
+        assert.equal(res.status, 404);
+        done();
+      });
+  });
+  it('should return 404 when trying to update non-existent offer', function (done) {
+    request
+      .put(offer2.offer_url)
+      .send(offer2)
       .end(function (err, res) {
         assert.equal(res.status, 404);
         done();
