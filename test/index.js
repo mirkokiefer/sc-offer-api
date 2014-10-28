@@ -12,12 +12,12 @@ before(function (done) {
   require('../index').start('localhost', port, store, done);
 });
 
-var offer1 = createOfferData('Fancy');
-var offer2 = createOfferData('Schmancy');
+var offer1 = createSomeValidCatalog('Fancy');
+var offer2 = createSomeValidCatalog('Schmancy');
 var testOffers = [offer1, offer2];
 
 describe('Offer API', function () {
-  it('should fail to create an offer with missing properties', function(done) {
+  it('should fail to create a catalog with missing mandatory properties', function(done) {
     var requiredProperties = [
       'type',
       'provider_id',
@@ -26,16 +26,71 @@ describe('Offer API', function () {
       'valid_from',
       'valid_until',
       'delivery_date',
-      'status'
+      'status',
+      'pages'
     ];
     async.eachSeries(requiredProperties, function(key, cb) {
-      var offerData = createSomeValidOfferData();
+      var offerData = createSomeValidCatalog('Awesome Title');
       offerData[key] = undefined;
       request.post(host + '/offers')
         .send(offerData)
         .end(function(err, res) {
           if (err) return cb(err);
-          assert.equal(res.status, 400);
+          assert.equal(res.status, 400, res.text);
+          cb();
+        });
+    }, done);
+  });
+  it('should fail to create a coupon with missing mandatory properties', function(done) {
+    var requiredProperties = [
+      'type',
+      'provider_id',
+      'regions',
+      'title',
+      'valid_from',
+      'valid_until',
+      'delivery_date',
+      'status',
+      'text',
+      'pic_url',
+      'pic_metadata_url'
+    ];
+    async.eachSeries(requiredProperties, function(key, cb) {
+      var offerData = createSomeValidCoupon('Awesome Title');
+      offerData[key] = undefined;
+      request.post(host + '/offers')
+        .send(offerData)
+        .end(function(err, res) {
+          if (err) return cb(err);
+          assert.equal(res.status, 400, res.text);
+          cb();
+        });
+    }, done);
+  });
+  it('should fail to create an online-coupon with missing mandatory properties', function(done) {
+    var requiredProperties = [
+      'type',
+      'provider_id',
+      'regions',
+      'title',
+      'valid_from',
+      'valid_until',
+      'delivery_date',
+      'status',
+      'text',
+      'pic_url',
+      'pic_metadata_url',
+      'affiliate_url',
+      'coupon_code'
+    ];
+    async.eachSeries(requiredProperties, function(key, cb) {
+      var offerData = createSomeValidOnlineCoupon('Awesome Title');
+      offerData[key] = undefined;
+      request.post(host + '/offers')
+        .send(offerData)
+        .end(function(err, res) {
+          if (err) return cb(err);
+          assert.equal(res.status, 400, res.text);
           cb();
         });
     }, done);
@@ -63,7 +118,7 @@ describe('Offer API', function () {
       });
   });
   it('should create offer2', function (done) {
-    var offer = createOfferData();
+    var offer = createSomeValidCatalog('Awesome Title');
     request
       .post(host + '/offers')
       .send(offer2)
@@ -128,20 +183,12 @@ describe('Offer API', function () {
   });
 });
 
-function createOfferData(title) {
-  return {
-    title: title,
-    provider_id: '100',
-    pages: []
-  };
-}
-
-function createSomeValidOfferData() {
+function createSomeValidCatalog(title) {
   return {
     type: 'catalog',
     provider_id: 'mcdonalds',
     regions: ['DE', 'US'],
-    title: 'Awesome Title',
+    title: title,
     valid_from: '2014-10-29T00:00:00.000Z',
     valid_until: '2014-11-30T00:00:00.000Z',
     delivery_date: '2014-10-28T00:00:00.000Z',
@@ -161,5 +208,45 @@ function createSomeValidOfferData() {
       pic_metadata_url: 'http://example.com/images/68302170-5eaf-11e4-8d59-59d9e4019ad5',
     }],
     is_fullscreen: true
+  };
+}
+
+function createSomeValidOnlineCoupon(title) {
+  return {
+    type: 'online_coupon',
+    title: title,
+    provider_id: 'burger-king',
+    text: 'Lorem ipsum',
+    affiliate_url: 'http://coupon.bar.baz',
+    coupon_code: 'code1',
+    pic_metadata_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5',
+    pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/medium',
+    status: 'created',
+    regions: ['ES', 'CA'],
+    valid_from: '2014-10-28T00:00:00.000Z',
+    valid_until: '2014-11-28T00:00:00.000Z',
+    delivery_date: '2014-10-28T00:00:00.000Z',
+    terms_and_conditions: 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+  };
+}
+
+function createSomeValidCoupon(title) {
+  return {
+    type: 'coupon',
+    title: title,
+    provider_id: 'burger-king',
+    text: 'Lorem ipsum',
+    pic_metadata_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5',
+    pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/medium',
+    status: 'created',
+    regions: ['ES', 'CA'],
+    barcode: {
+      format: 'CODE_39',
+      content: 'code123'
+    },
+    valid_from: '2014-10-28T00:00:00.000Z',
+    valid_until: '2014-11-28T00:00:00.000Z',
+    delivery_date: '2014-10-28T00:00:00.000Z',
+    terms_and_conditions: 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
   };
 }

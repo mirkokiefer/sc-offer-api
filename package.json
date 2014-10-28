@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "async": "^0.9.0",
+    "joi": "^4.7.0",
     "node-uuid": "^1.4.1",
     "restify": "^2.8.3"
   }

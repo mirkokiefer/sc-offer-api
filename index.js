@@ -3,6 +3,8 @@ var restify = require('restify');
 var uuid = require('node-uuid').v4;
 var url = require('url');
 var async = require('async');
+var joi = require('joi');
+var offerValidationSchemata = require('./lib/offer-schemata');
 
 module.exports = {
   start: start
@@ -29,9 +31,9 @@ function createServer(store, resolveURL) {
   var server = restify.createServer({name: 'offer_api'});
   server.use(restify.bodyParser());
 
-  server.post('/offers', postOffer);
+  server.post('/offers', validateOfferBody, postOffer);
   server.get('/offers/:offer_id', getOffer);
-  server.put('/offers/:offer_id', putOffer);
+  server.put('/offers/:offer_id', validateOfferBody, putOffer);
   server.del('/offers/:offer_id', deleteOffer);
   server.get('/offers', getOffers);
 
@@ -58,6 +60,9 @@ function createServer(store, resolveURL) {
     store.readObject(offerID, function (err, offer) {
       if (err) {
         return res.send(err.statusCode, err.message);
+      }
+      if (!offer) {
+        return next(new restify.NotFoundError());
       }
       offer.offer_url = createOfferURL(offer.offer_id);
       res.send(200, offer);
@@ -106,5 +111,33 @@ function createServer(store, resolveURL) {
 
   function createOfferURL(offerID) {
     return resolveURL('offers/' + offerID);
+  }
+
+  function validateOfferBody(req, res, next) {
+    var offer = req.body;
+    if (!offer) {
+      return next(new restify.BadRequestError());
+    }
+    joi.validate(offer, offerValidationSchemata.base, {
+      abortEarly: false,
+      convert: false,
+      allowUnknown: true
+    }, function(err) {
+      if (err) {
+        return next(new restify.BadRequestError(err.message));
+      }
+      var offerType = offer.type;
+      var schemaForType = offerValidationSchemata[offerType];
+      joi.validate(offer, schemaForType, {
+        abortEarly: false,
+        convert: false,
+        allowUnknown: true
+      }, function(err) {
+        if (err) {
+          return next(new restify.BadRequestError(err.message));
+        }
+        next();
+      });
+    });
   }
 }
