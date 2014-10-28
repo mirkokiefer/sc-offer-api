@@ -74,13 +74,21 @@ function createServer(store, resolveURL) {
 
   function putOffer(req, res, next) {
     var offerID = req.params.offer_id;
-    var offer = req.body;
-    offer.offer_id = offerID;
-    store.writeObject(offerID, offer, function (err) {
+    var updatedOffer = req.body;
+    store.readObject(offerID, function(err, existing) {
       if (err) {
         return res.send(err.statusCode, err.message);
       }
-      res.send(200);
+      if (!existing) {
+        return next(new restify.NotFoundError());
+      }
+      updatedOffer.offer_id = offerID;
+      store.writeObject(offerID, updatedOffer, function (err) {
+        if (err) {
+          return res.send(err.statusCode, err.message);
+        }
+        res.send(200);
+      });
     });
   }
 
