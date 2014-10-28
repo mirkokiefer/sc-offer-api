@@ -29,6 +29,11 @@
         }
       }
     },
+    "moment": {
+      "version": "2.8.3",
+      "from": "moment@",
+      "resolved": "https://registry.npmjs.org/moment/-/moment-2.8.3.tgz"
+    },
     "node-uuid": {
       "version": "1.4.1",
       "from": "node-uuid@^1.4.1",
