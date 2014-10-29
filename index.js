@@ -13,10 +13,7 @@ module.exports = {
 
 function start(hostname, port, store, cb) {
   var server = createServer(store, resolveURL);
-  server.listen(port, function() {
-    console.log('%s listening at %s', server.name, server.url);
-    cb();
-  });
+  server.listen(port, cb);
 
   function resolveURL(pathname) {
     return url.format({
@@ -32,6 +29,7 @@ function createServer(store, resolveURL) {
   var server = restify.createServer({name: 'offer_api'});
   server.use(restify.bodyParser());
 
+  server.get('/', getStatus);
   server.post('/offers', validateOfferBody, postOffer);
   server.get('/offers/:offer_id', getOffer);
   server.put('/offers/:offer_id', validateOfferBody, putOffer);
@@ -39,6 +37,10 @@ function createServer(store, resolveURL) {
   server.get('/offers', getOffers);
 
   return server;
+
+  function getStatus(req, res, next) {
+    res.send(200, {running: true});
+  }
 
   function postOffer(req, res, next) {
     var id = uuid();
