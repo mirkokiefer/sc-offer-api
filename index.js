@@ -168,7 +168,8 @@ function mapOffer(data) {
     pic_metadata_url: true,
     text: true,
     affiliate_url: true,
-    coupon_code: true
+    coupon_code: true,
+    highres_pic_url: true
   };
   var mapped = {};
   Object.keys(simpleKeys).forEach(function(key) {
@@ -177,6 +178,7 @@ function mapOffer(data) {
   mapped.valid_from = moment(data.valid_from).toDate();
   mapped.valid_until = moment(data.valid_until).toDate();
   mapped.delivery_date = moment(data.delivery_date).toDate();
+  mapped.splash_pic = mapSplashPic(data.splash_pic);
   if (data.pages) {
     mapped.pages = mapPages(data.pages);
   }
@@ -185,11 +187,20 @@ function mapOffer(data) {
   }
   return mapped;
 
+  function mapSplashPic(splashPic) {
+    return {
+      url: splashPic.url,
+      width: splashPic.width,
+      height: splashPic.height
+    };
+  }
+
   function mapPages(pages) {
     return pages.map(function(page) {
       return {
         pic_url: page.pic_url,
         pic_metadata_url: page.pic_metadata_url,
+        highres_pic_url: page.highres_pic_url,
         title: page.title,
         store_url: page.store_url
       };
