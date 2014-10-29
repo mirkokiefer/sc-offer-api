@@ -15,8 +15,8 @@
     "jshint": "^2.5.6",
     "mocha": "~1.21.5",
     "mocha-jshint": "0.0.9",
-    "s3store-mock": "0.0.4",
-    "superagent": "~0.20.0"
+    "superagent": "~0.20.0",
+    "s3store-mock": "0.0.4"
   },
   "dependencies": {
     "async": "^0.9.0",
@@ -24,6 +24,7 @@
     "moment": "^2.8.3",
     "node-uuid": "^1.4.1",
     "restify": "^2.8.3",
-    "underscore": "^1.7.0"
+    "underscore": "^1.7.0",
+    "s3store": "0.0.4"
   }
 }

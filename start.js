@@ -1,6 +1,6 @@
 
 var port = process.env.PORT || 5000;
-var hostname = process.env.HOSTNAME;
+var hostname = process.env.HOSTNAME || 'localhost';
 var store = require('s3store-mock')();
 
 require('./index').start(hostname, port, store, function () {

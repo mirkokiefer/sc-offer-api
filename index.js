@@ -30,6 +30,9 @@ function createServer(store, resolveURL) {
   server.use(restify.bodyParser());
 
   server.get('/', getStatus);
+  server.get('/restart', function (req) {
+    process.exit(1);
+  });
   server.post('/offers', validateOfferBody, postOffer);
   server.get('/offers/:offer_id', getOffer);
   server.put('/offers/:offer_id', validateOfferBody, putOffer);
@@ -39,7 +42,7 @@ function createServer(store, resolveURL) {
   return server;
 
   function getStatus(req, res, next) {
-    res.send(200, {running: true});
+    res.send(200, {running: true, offers: resolveURL('offers')});
   }
 
   function postOffer(req, res, next) {
