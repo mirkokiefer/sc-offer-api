@@ -28,7 +28,9 @@ describe('Offer API', function () {
       'valid_until',
       'delivery_date',
       'status',
-      'pages'
+      'pages',
+      'splash_pic',
+      'highres_pic_url'
     ];
     async.eachSeries(requiredProperties, function(key, cb) {
       var offerData = createSomeValidCatalog('Awesome Title');
@@ -37,7 +39,25 @@ describe('Offer API', function () {
         .send(offerData)
         .end(function(err, res) {
           if (err) return cb(err);
-          assert.equal(res.status, 400, res.text);
+          assert.equal(res.status, 400);
+          cb();
+        });
+    }, done);
+  });
+  it('should fail to create a catalog with missing mandatory properties in pages', function(done) {
+    var requiredProperties = [
+      'pic_url',
+      'pic_metadata_url',
+      'highres_pic_url'
+    ];
+    async.eachSeries(requiredProperties, function(key, cb) {
+      var offerData = createSomeValidCatalog('Awesome Title');
+      offerData.pages[0][key] = undefined;
+      request.post(host + '/offers')
+        .send(offerData)
+        .end(function(err, res) {
+          if (err) return cb(err);
+          assert.equal(res.status, 400);
           cb();
         });
     }, done);
@@ -54,7 +74,9 @@ describe('Offer API', function () {
       'status',
       'text',
       'pic_url',
-      'pic_metadata_url'
+      'pic_metadata_url',
+      'splash_pic',
+      'highres_pic_url'
     ];
     async.eachSeries(requiredProperties, function(key, cb) {
       var offerData = createSomeValidCoupon('Awesome Title');
@@ -63,7 +85,7 @@ describe('Offer API', function () {
         .send(offerData)
         .end(function(err, res) {
           if (err) return cb(err);
-          assert.equal(res.status, 400, res.text);
+          assert.equal(res.status, 400);
           cb();
         });
     }, done);
@@ -81,6 +103,8 @@ describe('Offer API', function () {
       'text',
       'pic_url',
       'pic_metadata_url',
+      'splash_pic',
+      'highres_pic_url',
       'affiliate_url',
       'coupon_code'
     ];
@@ -91,7 +115,7 @@ describe('Offer API', function () {
         .send(offerData)
         .end(function(err, res) {
           if (err) return cb(err);
-          assert.equal(res.status, 400, res.text);
+          assert.equal(res.status, 400);
           cb();
         });
     }, done);
@@ -224,19 +248,28 @@ function createSomeValidCatalog(title) {
     valid_until: '2014-11-30T00:00:00.000Z',
     delivery_date: '2014-10-28T00:00:00.000Z',
     status: 'created',
+    splash_pic: {
+      url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/low',
+      width: 123,
+      height: 321
+    },
+    highres_pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/high',
     pages: [{
       title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy',
       pic_url: 'http://example.com/images/682d6250-5eaf-11e4-8d59-59d9e4019ad5/medium',
       pic_metadata_url: 'http://example.com/images/682d6250-5eaf-11e4-8d59-59d9e4019ad5',
+      highres_pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/high',
       store_url: 'http://foo.bar.baz'
     }, {
       pic_url: 'http://example.com/images/682ec1e0-5eaf-11e4-8d59-59d9e4019ad5/medium',
       pic_metadata_url: 'http://example.com/images/682ec1e0-5eaf-11e4-8d59-59d9e4019ad5',
+      highres_pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/high',
       store_url: 'http://foo2.bar.baz/123'
     }, {
       title: 'eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. A',
       pic_url: 'http://example.com/images/68302170-5eaf-11e4-8d59-59d9e4019ad5/medium',
       pic_metadata_url: 'http://example.com/images/68302170-5eaf-11e4-8d59-59d9e4019ad5',
+      highres_pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/high',
     }],
     is_fullscreen: true
   };
@@ -252,6 +285,12 @@ function createSomeValidOnlineCoupon(title) {
     coupon_code: 'code1',
     pic_metadata_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5',
     pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/medium',
+    splash_pic: {
+      url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/low',
+      width: 123,
+      height: 321
+    },
+    highres_pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/high',
     status: 'created',
     regions: ['ES', 'CA'],
     valid_from: '2014-10-28T00:00:00.000Z',
@@ -269,6 +308,12 @@ function createSomeValidCoupon(title) {
     text: 'Lorem ipsum',
     pic_metadata_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5',
     pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/medium',
+    splash_pic: {
+      url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/low',
+      width: 123,
+      height: 321
+    },
+    highres_pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/high',
     status: 'created',
     regions: ['ES', 'CA'],
     barcode: {
