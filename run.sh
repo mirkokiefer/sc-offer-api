@@ -1,2 +1,3 @@
 
-npm start
+npm install
+exec npm start
