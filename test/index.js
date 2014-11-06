@@ -10,7 +10,7 @@ var host = 'http://localhost:' + port;
 var store = require('s3store-mock')();
 
 before(function (done) {
-  require('../index').start('localhost', port, store, done);
+  require('../index').start(host, port, store, done);
 });
 
 var offer1 = createSomeValidCatalog('Fancy');

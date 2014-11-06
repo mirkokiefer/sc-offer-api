@@ -1,6 +1,6 @@
 
 var port = process.env.PORT || 5000;
-var hostname = process.env.PUBLIC_HOSTNAME || 'localhost';
+var host = process.env.PUBLIC_HOST || 'http://localhost';
 var createStore = require('s3store');
 
 var options = {
@@ -10,8 +10,8 @@ var options = {
   region: process.env.S3_REGION || 'eu-west-1',
   namespace: process.env.S3_NAMESPACE || 'offers'
 };
-var store = createStore(options);
 
-require('./index').start(hostname, port, store, function () {
-  console.log('listening at %s:%s', hostname, port);
+var store = createStore(options);
+require('./index').start(host, port, store, function () {
+  console.log('listening at %s', host);
 });

@@ -1,0 +1,34 @@
+{
+  "provider_id": "mcdonalds",
+  "type": "catalog",
+  "regions": ["DE", "US"],
+  "title": "Awesome Title",
+  "valid_from": "2014-10-29T00:00:00.000Z",
+  "valid_until": "2014-11-30T00:00:00.000Z",
+  "delivery_date": "2014-10-28T00:00:00.000Z",
+  "status": "created",
+  "splash_pic": {
+    "url": "http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/low",
+    "width": 123,
+    "height": 321
+  },
+  "highres_pic_url": "http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/high",
+  "pages": [{
+    "title": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy",
+    "pic_url": "http://example.com/images/682d6250-5eaf-11e4-8d59-59d9e4019ad5/medium",
+    "pic_metadata_url": "http://example.com/images/682d6250-5eaf-11e4-8d59-59d9e4019ad5",
+    "highres_pic_url": "http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/high",
+    "store_url": "http://foo.bar.baz"
+  }, {
+    "pic_url": "http://example.com/images/682ec1e0-5eaf-11e4-8d59-59d9e4019ad5/medium",
+    "pic_metadata_url": "http://example.com/images/682ec1e0-5eaf-11e4-8d59-59d9e4019ad5",
+    "highres_pic_url": "http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/high",
+    "store_url": "http://foo2.bar.baz/123"
+  }, {
+    "title": "eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. A",
+    "pic_url": "http://example.com/images/68302170-5eaf-11e4-8d59-59d9e4019ad5/medium",
+    "pic_metadata_url": "http://example.com/images/68302170-5eaf-11e4-8d59-59d9e4019ad5",
+    "highres_pic_url": "http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/high"
+  }],
+  "is_fullscreen": true
+}

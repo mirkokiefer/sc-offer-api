@@ -11,17 +11,12 @@ module.exports = {
   start: start
 };
 
-function start(hostname, port, store, cb) {
+function start(host, port, store, cb) {
   var server = createServer(store, resolveURL);
   server.listen(port, cb);
 
   function resolveURL(pathname) {
-    return url.format({
-      protocol: 'http',
-      hostname: hostname,
-      port: port,
-      pathname: pathname
-    });
+    return url.resolve(host, pathname);
   }
 }
 
