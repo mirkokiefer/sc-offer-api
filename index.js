@@ -5,6 +5,8 @@ var url = require('url');
 var async = require('async');
 var joi = require('joi');
 var moment = require('moment');
+var bunyan = require('bunyan');
+var createPrettyStream = require('bunyan-pretty');
 var offerValidationSchemata = require('./lib/offer-schemata');
 
 module.exports = {
@@ -23,6 +25,13 @@ function start(host, port, store, cb) {
 function createServer(store, resolveURL) {
   var server = restify.createServer({name: 'offer_api'});
   server.use(restify.bodyParser());
+  server.on('after', restify.auditLogger({
+    log: bunyan.createLogger({
+      name: 'audit',
+      stream: process.stdout.isTTY ? createPrettyStream() : process.stdout,
+      level: 'info'
+    })
+  }));
 
   server.get('/', getStatus);
   server.get('/restart', function (req) {
@@ -38,6 +47,7 @@ function createServer(store, resolveURL) {
 
   function getStatus(req, res, next) {
     res.send(200, {running: true, offers: resolveURL('offers')});
+    return next();
   }
 
   function postOffer(req, res, next) {
@@ -47,13 +57,14 @@ function createServer(store, resolveURL) {
     var mapped = mapOffer(offer);
     store.writeObject(id, mapped, function (err) {
       if (err) {
-        return res.send(err.statusCode, err.message);
+        return next(err);
       }
       var responseBody = {
         offer_id: mapped.offer_id,
         offer_url: createOfferURL(mapped.offer_id)
       };
       res.send(201, responseBody);
+      return next();
     });
   }
 
@@ -61,7 +72,7 @@ function createServer(store, resolveURL) {
     var offerID = req.params.offer_id;
     store.readObject(offerID, function (err, offer) {
       if (err) {
-        return res.send(err.statusCode, err.message);
+        return next(err);
       }
       if (!offer) {
         return next(new restify.NotFoundError());
@@ -69,6 +80,7 @@ function createServer(store, resolveURL) {
       var mapped = mapOffer(offer);
       mapped.offer_url = createOfferURL(offer.offer_id);
       res.send(200, mapped);
+      return next();
     });
   }
 
@@ -77,7 +89,7 @@ function createServer(store, resolveURL) {
     var updatedOffer = req.body;
     store.readObject(offerID, function(err, existing) {
       if (err) {
-        return res.send(err.statusCode, err.message);
+        return next(err);
       }
       if (!existing) {
         return next(new restify.NotFoundError());
@@ -85,9 +97,10 @@ function createServer(store, resolveURL) {
       updatedOffer.offer_id = offerID;
       store.writeObject(offerID, updatedOffer, function (err) {
         if (err) {
-          return res.send(err.statusCode, err.message);
+          return next(err);
         }
         res.send(200);
+        return next();
       });
     });
   }
@@ -96,26 +109,28 @@ function createServer(store, resolveURL) {
     var offerID = req.params.offer_id;
     store.deleteObject(offerID, function (err) {
       if (err) {
-        return res.send(err.statusCode, err.message);
+        return next(err);
       }
       res.send(200);
+      return next();
     });
   }
 
   function getOffers(req, res, next) {
     store.readKeys(function (err, keys) {
       if (err) {
-        return res.send(err.statusCode, err.message);
+        return next(err);
       }
       async.map(keys, store.readObject, function (err, offers) {
         if (err) {
-          return res.send(err.statusCode, err.message);
+          return next(err);
         }
         var mappedOffers = offers.map(function (each) {
           each.offer_url = createOfferURL(each.offer_id);
           return each;
         });
         res.send(200, {offers: mappedOffers});
+        return next();
       });
     });
   }

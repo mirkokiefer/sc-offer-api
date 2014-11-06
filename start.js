@@ -12,6 +12,7 @@ var options = {
 };
 
 var store = createStore(options);
+
 require('./index').start(host, port, store, function () {
   console.log('listening at %s', host);
 });
