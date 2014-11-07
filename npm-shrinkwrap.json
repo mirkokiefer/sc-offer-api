@@ -288,9 +288,9 @@
       }
     },
     "s3store": {
-      "version": "0.0.5",
-      "from": "s3store@^0.0.5",
-      "resolved": "https://registry.npmjs.org/s3store/-/s3store-0.0.5.tgz",
+      "version": "0.0.6",
+      "from": "s3store@",
+      "resolved": "https://registry.npmjs.org/s3store/-/s3store-0.0.6.tgz",
       "dependencies": {
         "knox": {
           "version": "0.9.1",

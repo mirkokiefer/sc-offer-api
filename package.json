@@ -26,7 +26,7 @@
     "moment": "^2.8.3",
     "node-uuid": "^1.4.1",
     "restify": "^2.8.3",
-    "s3store": "^0.0.5",
+    "s3store": "0.0.6",
     "underscore": "^1.7.0"
   }
 }
