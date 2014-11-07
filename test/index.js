@@ -47,7 +47,6 @@ describe('Offer API', function () {
   it('should fail to create a catalog with missing mandatory properties in pages', function(done) {
     var requiredProperties = [
       'pic_url',
-      'pic_metadata_url',
       'highres_pic_url'
     ];
     async.eachSeries(requiredProperties, function(key, cb) {
@@ -74,7 +73,6 @@ describe('Offer API', function () {
       'status',
       'text',
       'pic_url',
-      'pic_metadata_url',
       'splash_pic',
       'highres_pic_url'
     ];
@@ -102,11 +100,9 @@ describe('Offer API', function () {
       'status',
       'text',
       'pic_url',
-      'pic_metadata_url',
       'splash_pic',
       'highres_pic_url',
-      'affiliate_url',
-      'coupon_code'
+      'affiliate_url'
     ];
     async.eachSeries(requiredProperties, function(key, cb) {
       var offerData = createSomeValidOnlineCoupon('Awesome Title');
@@ -257,18 +253,15 @@ function createSomeValidCatalog(title) {
     pages: [{
       title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy',
       pic_url: 'http://example.com/images/682d6250-5eaf-11e4-8d59-59d9e4019ad5/medium',
-      pic_metadata_url: 'http://example.com/images/682d6250-5eaf-11e4-8d59-59d9e4019ad5',
       highres_pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/high',
       store_url: 'http://foo.bar.baz'
     }, {
       pic_url: 'http://example.com/images/682ec1e0-5eaf-11e4-8d59-59d9e4019ad5/medium',
-      pic_metadata_url: 'http://example.com/images/682ec1e0-5eaf-11e4-8d59-59d9e4019ad5',
       highres_pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/high',
       store_url: 'http://foo2.bar.baz/123'
     }, {
       title: 'eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. A',
       pic_url: 'http://example.com/images/68302170-5eaf-11e4-8d59-59d9e4019ad5/medium',
-      pic_metadata_url: 'http://example.com/images/68302170-5eaf-11e4-8d59-59d9e4019ad5',
       highres_pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/high',
     }],
     is_fullscreen: true
@@ -282,8 +275,6 @@ function createSomeValidOnlineCoupon(title) {
     provider_id: 'burger-king',
     text: 'Lorem ipsum',
     affiliate_url: 'http://coupon.bar.baz',
-    coupon_code: 'code1',
-    pic_metadata_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5',
     pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/medium',
     splash_pic: {
       url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/low',
@@ -306,7 +297,6 @@ function createSomeValidCoupon(title) {
     title: title,
     provider_id: 'burger-king',
     text: 'Lorem ipsum',
-    pic_metadata_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5',
     pic_url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/medium',
     splash_pic: {
       url: 'http://example.com/images/a289cd00-5ebc-11e4-8d59-59d9e4019ad5/low',
