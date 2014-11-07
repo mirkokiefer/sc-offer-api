@@ -63,6 +63,7 @@ function createServer(store, resolveURL) {
         offer_id: mapped.offer_id,
         offer_url: createOfferURL(mapped.offer_id)
       };
+      res.charSet('utf-8');
       res.send(201, responseBody);
       return next();
     });
@@ -79,6 +80,7 @@ function createServer(store, resolveURL) {
       }
       var mapped = mapOffer(offer);
       mapped.offer_url = createOfferURL(offer.offer_id);
+      res.charSet('utf-8');
       res.send(200, mapped);
       return next();
     });
@@ -129,6 +131,7 @@ function createServer(store, resolveURL) {
           each.offer_url = createOfferURL(each.offer_id);
           return each;
         });
+        res.charSet('utf-8');
         res.send(200, {offers: mappedOffers});
         return next();
       });

@@ -122,6 +122,7 @@ describe('Offer API', function () {
       .send(offer1)
       .end(function (err, res) {
         assert.equal(res.status, 201);
+        assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
         assert.ok(res.body.offer_id);
         assert.ok(res.body.offer_url);
         offer1.offer_id = res.body.offer_id;
@@ -134,6 +135,7 @@ describe('Offer API', function () {
       .get(offer1.offer_url)
       .end(function (err, res) {
         assert.equal(res.status, 200);
+        assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
         assert.deepEqual(res.body, offer1);
         done();
       });
@@ -145,6 +147,7 @@ describe('Offer API', function () {
       .send(offer2)
       .end(function (err, res) {
         assert.equal(res.status, 201);
+        assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
         offer2.offer_id = res.body.offer_id;
         offer2.offer_url = res.body.offer_url;
         done();
@@ -155,6 +158,7 @@ describe('Offer API', function () {
       .get(host + '/offers')
       .end(function (err, res) {
         assert.equal(res.status, 200);
+        assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
         assert.deepEqual(res.body, {offers: testOffers});
         done();
       });
@@ -174,6 +178,7 @@ describe('Offer API', function () {
       .get(offer1.offer_url)
       .end(function (err, res) {
         assert.equal(res.status, 200);
+        assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
         assert.deepEqual(res.body, offer1);
         done();
       });
