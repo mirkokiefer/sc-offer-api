@@ -1,6 +1,6 @@
 {
-  "name": "offer-api",
-  "version": "0.0.1",
+  "name": "sc-offer-api",
+  "version": "0.0.2",
   "description": "ERROR: No README.md file found!",
   "main": "index.js",
   "scripts": {
