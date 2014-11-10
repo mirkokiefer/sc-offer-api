@@ -81,6 +81,37 @@
       "width": 123,
       "url": "http://imageservicesoup-135403806.eu-west-1.elb.amazonaws.com/images/f2c5bbb0-23c2-11e4-9f93-6772b2da397a/low"
     }
+  },  {
+    "offer_url": "http://localhost:2003/offers/2dbf4468-3652-4f5a-b8b3-789b65f2ac1c2",
+    "barcode": {
+      "format": "QR_CODE",
+      "content": "123456"
+    },
+    "pic_url": "http://imageservicesoup-135403806.eu-west-1.elb.amazonaws.com/images/f2c5bbb0-23c2-11e4-9f93-6772b2da397a/medium",
+    "targeted_card_numbers": [
+      "11111111"
+    ],
+    "status": "live",
+    "title": "coupon | DE | live | targeted@11111111 | valid | deliverable",
+    "regions": [
+      "DE"
+    ],
+    "provider_id": "100",
+    "type": "coupon",
+    "terms_and_conditions": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.",
+    "offer_id": "2dbf4468-3652-4f5a-b8b3-789b65f2ac1c2",
+    "pic_metadata_url": "http://imageservicesoup-135403806.eu-west-1.elb.amazonaws.com/images/f2c5bbb0-23c2-11e4-9f93-6772b2da397a",
+    "text": "Genießen Sie den Sommer mit dem 10%-Rabatt auf alle Bademoden.",
+    "coupon_code": "ABC123456DEF",
+    "highres_pic_url": "http://imageservicesoup-135403806.eu-west-1.elb.amazonaws.com/images/f2c5bbb0-23c2-11e4-9f93-6772b2da397a/high",
+    "valid_from": "2013-07-03T00:00:00.000Z",
+    "valid_until": "2037-08-03T21:59:59.000Z",
+    "delivery_date": "2013-07-02T22:00:00.000Z",
+    "splash_pic": {
+      "height": 321,
+      "width": 123,
+      "url": "http://imageservicesoup-135403806.eu-west-1.elb.amazonaws.com/images/f2c5bbb0-23c2-11e4-9f93-6772b2da397a/low"
+    }
   }, {
     "offer_url": "http://localhost:2003/offers/4167ab42-2de9-4528-bc43-d3123f026d9c",
     "splash_pic": {
