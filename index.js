@@ -9,20 +9,9 @@ var bunyan = require('bunyan');
 var createPrettyStream = require('bunyan-pretty');
 var offerValidationSchemata = require('./lib/offer-schemata');
 
-module.exports = {
-  start: start
-};
+module.exports = createServer;
 
-function start(host, port, store, cb) {
-  var server = createServer(store, resolveURL);
-  server.listen(port, cb);
-
-  function resolveURL(pathname) {
-    return url.resolve(host, pathname);
-  }
-}
-
-function createServer(store, resolveURL) {
+function createServer(publicHost, store) {
   var server = restify.createServer({name: 'offer_api'});
   server.use(restify.bodyParser());
   server.on('after', restify.auditLogger({
@@ -44,6 +33,10 @@ function createServer(store, resolveURL) {
   server.get('/offers', getOffers);
 
   return server;
+
+  function resolveURL(pathname) {
+    return url.resolve(publicHost, pathname);
+  }
 
   function getStatus(req, res, next) {
     res.send(200, {running: true, offers: resolveURL('offers')});

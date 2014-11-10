@@ -9,15 +9,18 @@ var host = 'http://localhost:' + port;
 
 var store = require('s3store-mock')();
 
-before(function (done) {
-  require('../index').start(host, port, store, done);
-});
-
 var offer1 = createSomeValidCatalog('Fancy');
 var offer2 = createSomeValidCatalog('Schmancy');
 var testOffers = [offer1, offer2];
 
 describe('Offer API', function () {
+  var server = require('../index')(host, store);
+  before(function (done) {
+    server.listen(port, done);
+  });
+  after(function (done) {
+    server.close(done);
+  });
   it('should fail to create a catalog with missing mandatory properties', function(done) {
     var requiredProperties = [
       'type',
